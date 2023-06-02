@@ -38,4 +38,13 @@ public class BlogApiController {
     }
 
 
+    @GetMapping("/api/articles/{id}") // URL에서 {id}에 해당하는 값이 id로 들어옴
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable long id) {
+        Article article = blogService.findById(id);
+
+        return ResponseEntity.ok()
+                .body(new ArticleResponse(article));
+    }
+
+
 }
