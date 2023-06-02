@@ -3,8 +3,10 @@ package me.devyoon.myblog.service;
 import lombok.RequiredArgsConstructor;
 import me.devyoon.myblog.domain.Article;
 import me.devyoon.myblog.dto.AddArticleRequest;
+import me.devyoon.myblog.dto.UpdateArticleRequest;
 import me.devyoon.myblog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,5 +36,15 @@ public class BlogService {
     // 블로그 글의 ID를 받은 뒤 JPA에서 제공하는 deleteById() 메서드를 이용해 데이터베이스에서 데이터를 삭제한다.
     public void delete(long id) {
         blogRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Article update(long id, UpdateArticleRequest request) {
+        Article article = blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+
+        article.update(request.getTitle(), request.getContent());
+
+        return article;
     }
 }
