@@ -47,4 +47,13 @@ public class BlogApiController {
     }
 
 
+    @DeleteMapping("/api/articles/{id}")  //URL에서 {id}에 해당하는 값이 @PathVariable의 id에 들어감
+    public ResponseEntity<Void> deleteArticle(@PathVariable long id) {
+        blogService.delete(id);
+
+        return ResponseEntity.ok()
+                .build();
+    }
+
+
 }
