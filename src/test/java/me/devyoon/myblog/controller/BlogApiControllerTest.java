@@ -100,4 +100,32 @@ class BlogApiControllerTest {
                 .andExpect(jsonPath("$[0].title").value(title));
 
     }
+
+
+    @DisplayName("findArticle : 블로그 글 조회에 성공한다.")
+    @Test
+    public void findArticle() throws Exception {
+        //given
+        //블로그 글을 저장한다.
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                        .title(title)
+                        .content(content)
+                        .build());
+
+        //when
+        //저장한 블로그 글의 id값으로 API를 호출한다.
+        final ResultActions resultActions = mockMvc.perform(get(url, savedArticle.getId()));
+
+        //then
+        //응답 코드가 200 OK이고, 반환받은 title과 content가 저장된 값과 같은지 확인한다.
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(title))
+                .andExpect(jsonPath("$.content").value(content));
+
+    }
 }
