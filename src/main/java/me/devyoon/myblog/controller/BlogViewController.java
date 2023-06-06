@@ -22,12 +22,13 @@ public class BlogViewController {
 
     @GetMapping("/articles")
     public String getArticles(Model model) {
-        List<ArticleListViewResponse> articles = blogService.findAll().stream()
+        List<ArticleListViewResponse> articles = blogService.findAll()
+                .stream()
                 .map(ArticleListViewResponse::new)
                 .collect(Collectors.toList());
-        model.addAttribute("articles", articles);  // 블로그 글 리스트 저장
+        model.addAttribute("articles", articles);
 
-        return "articleList"; // articleList.html라는 뷰 조회
+        return "articleList";
     }
 
     @GetMapping("/articles/{id}")
@@ -38,15 +39,14 @@ public class BlogViewController {
         return "article";
     }
 
-    @GetMapping("/new-article")
-    // id 키를 가진 쿼리 파라미터의 값을
-    public String newArticle(@RequestParam(required = false) Long id, Model model) {
-        if( id == null ) { // id가 없으면 생성
-            model.addAttribute("article", new ArticleViewResponse());
 
-        } else { // id가 있으면 수정
-            Article article = blogService.findById(id);
+    @GetMapping("/new-article")
+    public String newArticle(@RequestParam(required = false) Long id, Model model) {
+        if (id == null) {
             model.addAttribute("article", new ArticleViewResponse());
+        } else {
+            Article article = blogService.findById(id);
+            model.addAttribute("article", new ArticleViewResponse(article));
         }
 
         return "newArticle";
